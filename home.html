@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>House Price Prediction</title>
+</head>
+<body>
+    <h1>House Price Prediction</h1>
+    <form id="prediction-form">
+        <label for="beds">Bedrooms:</label>
+        <input type="number" name="beds" id="beds" required>
+        
+        <label for="bath">Bathrooms:</label>
+        <input type="number" name="bath" id="bath" required>
+        
+        <button type="submit">Predict</button>
+    </form>
+
+    <p id="prediction-result"></p>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const beds = parseFloat(document.getElementById('beds').value);
+            const bath = parseFloat(document.getElementById('bath').value);
+
+            const data = {
+                'beds': beds,
+                'bath': bath
+            };
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.getElementById('prediction-result').textContent = `Predicted Price: ${result.prediction}`;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
